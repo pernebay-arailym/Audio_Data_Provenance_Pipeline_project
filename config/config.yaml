@@ -1,0 +1,24 @@
+# Directory where the pipeline reads original audio files
+# Put your WAV/MP3 files here (e.g. data/input/yourfile.wav)
+input_path: "data/input/"
+
+# Directory where processed (augmented) files will be saved
+output_path: "data/output/"
+
+# Which output formats to export. 
+output_formats:
+  - "wav"
+  - "mp3"
+
+# List of effects to apply, in order.
+# The pipeline will apply each effect sequentially in the order listed below.
+effects:
+  - name: "bandpass"     # effect type: bandpass filter (keeps only frequencies in a band)
+    low_freq: 300        # low cut frequency in Hertz (Hz) — frequencies below this attenuated
+    high_freq: 3000      # high cut frequency in Hertz (Hz) — frequencies above this attenuated
+
+  - name: "pitchshift"    # effect type: raise / lower pitch
+    semitones: 2         # pitch shift amount in semitones (positive = higher pitch, negative = lower)
+
+  - name: "mixnoise"      # effect type: overlay (mix) noise with the audio
+    volume: -20          # noise volume in decibels relative to full scale (dB). Negative values quieter.
