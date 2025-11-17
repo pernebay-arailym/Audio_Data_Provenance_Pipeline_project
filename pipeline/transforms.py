@@ -1,4 +1,5 @@
 from pydub import AudioSegment
+from pydub.generators import WhiteNoise
 import os
 
 
@@ -12,16 +13,20 @@ def apply_bandpass(audio, low_freq, high_freq):
 def apply_pitchshift(audio, semitones):
     # simple pitch shifting using speed change approximation
     new_rate = audio.frame_rate * (2.0 ** (semitones / 12))
-    shifted = audio.spawn(audio.raw_data, overrides={"frame_rate": int(new_rate)})
+    shifted = audio._spawn(audio.raw_data, overrides={"frame_rate": int(new_rate)})
     return shifted.set_frame_rate(audio.frame_rate)
 
 
-def apply__mixnoise(audio, volume=-20):
-    # adds white noise to the audio
-    noise = AudioSegment.silent(duration=len(audio))
-    noise = noise.overlay(
-        AudioSegment.white_noise(duration=len(audio)).apply_gain(volume)
-    )
+def apply_mixnoise(audio, volume=-20):
+    """Adds white noise to the audio using pydub generators."""
+
+    # Generate noise of same duration
+    noise = WhiteNoise().to_audio_segment(duration=len(audio))
+
+    # Adjust noise volume
+    noise = noise.apply_gain(volume)
+
+    # Overlay noise on top of original audio
     return audio.overlay(noise)
 
 
@@ -35,6 +40,6 @@ def apply_effects(audio, effects_list):
             audio = apply_pitchshift(audio, effect["semitones"])
 
         elif effect["name"] == "mixnoise":
-            audio = apply__mixnoise(audio, effect["volume"])
+            audio = apply_mixnoise(audio, effect["volume"])
 
     return audio
