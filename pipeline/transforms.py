@@ -23,3 +23,18 @@ def apply__mixnoise(audio, volume=-20):
         AudioSegment.white_noise(duration=len(audio)).apply_gain(volume)
     )
     return audio.overlay(noise)
+
+
+def apply_effects(audio, effects_list):
+    # applies effects showed in YAML config
+    for effect in effects_list:
+        if effect["name"] == "bandpass":
+            audio = apply_bandpass(audio, effect["low_freq"], effect["high_freq"])
+
+        elif effect["name"] == "pitchshift":
+            audio = apply_pitchshift(audio, effect["semitones"])
+
+        elif effect["name"] == "mixnoise":
+            audio = apply__mixnoise(audio, effect["volume"])
+
+    return audio
