@@ -5,6 +5,9 @@ input_path: "data/input/"
 # Directory where processed (augmented) files will be saved
 output_path: "data/output/"
 
+files: 
+  - "audio_2.wav"
+
 # Which output formats to export. 
 output_formats:
   - "wav"
@@ -12,13 +15,38 @@ output_formats:
 
 # List of effects to apply, in order.
 # The pipeline will apply each effect sequentially in the order listed below.
+#effects:
+#  - name: "bandpass"     # effect type: bandpass filter (keeps only frequencies in a band)
+#    low_freq: 300        # low cut frequency in Hertz (Hz) — frequencies below this attenuated
+#    high_freq: 3000      # high cut frequency in Hertz (Hz) — frequencies above this attenuated
+#
+ # - name: "pitchshift"    # effect type: raise / lower pitch
+#    semitones: 2         # pitch shift amount in semitones (positive = higher pitch, negative = lower)
+#
+#  - name: "mixnoise"      # effect type: overlay (mix) noise with the audio
+#    volume: -20          # noise volume in decibels relative to full scale (dB). Negative values quieter.
+
 effects:
-  - name: "bandpass"     # effect type: bandpass filter (keeps only frequencies in a band)
-    low_freq: 300        # low cut frequency in Hertz (Hz) — frequencies below this attenuated
-    high_freq: 3000      # high cut frequency in Hertz (Hz) — frequencies above this attenuated
+  - name: "eq"
+    low_gain: -3
+    mid_gain: +2
+    high_gain: +4      # sparkle for magical feel
 
-  - name: "pitchshift"    # effect type: raise / lower pitch
-    semitones: 2         # pitch shift amount in semitones (positive = higher pitch, negative = lower)
+  - name: "pitchshift"
+    semitones: +3      # slight youthful uplift
+    formant_shift: +1
 
-  - name: "mixnoise"      # effect type: overlay (mix) noise with the audio
-    volume: -20          # noise volume in decibels relative to full scale (dB). Negative values quieter.
+  - name: "chorus"
+    rate: 0.8
+    depth: 0.4
+    mix: 0.2
+
+  - name: "reverb"
+    room_size: 0.55
+    mix: 0.35          # fairy-tale ambience
+
+  - name: "delay"
+    time: 120
+    feedback: 0.15
+    mix: 0.10          # gentle echo like magical storytelling
+
